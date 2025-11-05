@@ -1,3 +1,16 @@
+// import { useState, useRef } from "react";
+// import { Hero } from "@/components/Hero";
+// import { BusinessCardForm, BusinessCardData } from "@/components/BusinessCardForm";
+// import { TemplateSelector } from "@/components/TemplateSelector";
+// import { AITemplateGallery } from "@/components/AITemplateGallery";
+// import { FontSelector } from "@/components/FontSelector";
+// import { CustomizationPanel } from "@/components/CustomizationPanel";
+// import { DynamicCard } from "@/components/templates/DynamicCard";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import { Button } from "@/components/ui/button";
+// import { Download } from "lucide-react";
+// import { downloadAsImage } from "@/lib/utils";
+
 import { useState, useRef } from "react";
 import { Hero } from "@/components/Hero";
 import { BusinessCardForm, BusinessCardData } from "@/components/BusinessCardForm";
@@ -6,10 +19,15 @@ import { AITemplateGallery } from "@/components/AITemplateGallery";
 import { FontSelector } from "@/components/FontSelector";
 import { CustomizationPanel } from "@/components/CustomizationPanel";
 import { DynamicCard } from "@/components/templates/DynamicCard";
+import { PricingSection } from "@/components/PricingSection";
+import { PaymentModal } from "@/components/PaymentModal";
+import { PaymentBanner } from "@/components/PaymentBanner";
+import { PaymentFeatures } from "@/components/PaymentFeatures";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { Download, CreditCard } from "lucide-react";
 import { downloadAsImage } from "@/lib/utils";
+
 
 const Index = () => {
   const [businessData, setBusinessData] = useState<BusinessCardData>({
@@ -23,27 +41,47 @@ const Index = () => {
     logo: "",
   });
 
+  // const [selectedDesign, setSelectedDesign] = useState<any>(null);
+  // const [selectedFont, setSelectedFont] = useState<string>("Arial, sans-serif");
+  // const [fontSize, setFontSize] = useState<number>(16);
+  // const [textColor, setTextColor] = useState<string>("#000000");
+  // const [accentColor, setAccentColor] = useState<string>("#0ea5e9");
+  // const cardRef = useRef<HTMLDivElement>(null);
+
   const [selectedDesign, setSelectedDesign] = useState<any>(null);
   const [selectedFont, setSelectedFont] = useState<string>("Arial, sans-serif");
   const [fontSize, setFontSize] = useState<number>(16);
   const [textColor, setTextColor] = useState<string>("#000000");
   const [accentColor, setAccentColor] = useState<string>("#0ea5e9");
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleDownload = () => {
+    if (cardRef.current) {
+      downloadAsImage(cardRef.current, selectedDesign.name);
+    }
+  };
+
+  const handleDownloadClick = () => {
+    // Show payment modal before download
+    setIsPaymentModalOpen(true);
+  };
 
   return (
     <div className="min-h-screen bg-background">
       <Hero />
-      
+      <PaymentBanner />
+
       <main className="container mx-auto max-w-7xl px-4 py-12">
         <div className="grid lg:grid-cols-2 gap-8 mb-12">
           <div>
             <BusinessCardForm data={businessData} onChange={setBusinessData} />
           </div>
-          
+
           <div>
             {selectedDesign ? (
               <div className="space-y-6">
-                <div className="bg-card rounded-xl p-6 shadow-[var(--shadow-card)] border border-border animate-scale-in">
+                {/* <div className="bg-card rounded-xl p-6 shadow-[var(--shadow-card)] border border-border animate-scale-in">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-2xl font-bold text-foreground">Selected Design Preview</h2>
                     <Button
@@ -55,7 +93,26 @@ const Index = () => {
                       <Download className="w-4 h-4" />
                       Download
                     </Button>
+                  </div> */}
+
+
+                <div className="bg-card rounded-xl p-6 shadow-[var(--shadow-card)] border border-border animate-scale-in">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-foreground">Selected Design Preview</h2>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={handleDownloadClick}
+                        variant="default"
+                        size="sm"
+                        className="gap-2"
+                      >
+                        <CreditCard className="w-4 h-4" />
+                        Purchase & Download
+                      </Button>
+                    </div>
                   </div>
+
+
                   <div className="bg-gradient-to-br from-muted to-background p-8 rounded-lg">
                     <div className="max-w-md mx-auto">
                       <div ref={cardRef}>
@@ -72,7 +129,7 @@ const Index = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div >
 
                 <div className="bg-card rounded-xl p-6 shadow-[var(--shadow-card)] border border-border animate-fade-in [animation-delay:0.2s] opacity-0 [animation-fill-mode:forwards]">
                   <CustomizationPanel
@@ -86,12 +143,12 @@ const Index = () => {
                     onAccentColorChange={setAccentColor}
                   />
                 </div>
-              </div>
+              </div >
             ) : (
               <TemplateSelector data={businessData} />
             )}
-          </div>
-        </div>
+          </div >
+        </div >
 
         <div className="animate-fade-in [animation-delay:0.6s] opacity-0 [animation-fill-mode:forwards]">
           <Tabs defaultValue="ai" className="w-full">
@@ -101,15 +158,15 @@ const Index = () => {
               </TabsTrigger>
               <TabsTrigger value="classic">Classic Templates</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="ai" className="space-y-6">
-              <AITemplateGallery 
-                data={businessData} 
+              <AITemplateGallery
+                data={businessData}
                 onSelectTemplate={setSelectedDesign}
                 selectedDesignId={selectedDesign?.id}
               />
             </TabsContent>
-            
+
             <TabsContent value="classic" className="space-y-6">
               <div className="bg-card rounded-xl p-6 shadow-[var(--shadow-card)] border border-border">
                 <TemplateSelector
@@ -123,14 +180,31 @@ const Index = () => {
             </TabsContent>
           </Tabs>
         </div>
-      </main>
-      
+      </main >
+
+
+      {/* Payment Features */}
+      < PaymentFeatures />
+
+      {/* Pricing Section */}
+      < PricingSection />
+
+      {/* Payment Modal */}
+      < PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        itemName={selectedDesign?.name || "Business Card Design"}
+        price="$2.99"
+        onPaymentComplete={handleDownload}
+      />
+
+
       <footer className="border-t border-border py-8 mt-16">
         <div className="container mx-auto max-w-7xl px-4 text-center text-muted-foreground text-sm">
           <p>© 2025 Business Card Creator. Create professional cards with AI-powered designs.</p>
         </div>
       </footer>
-    </div>
+    </div >
   );
 };
 

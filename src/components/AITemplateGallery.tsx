@@ -25,24 +25,46 @@ const TemplateCard = ({ design, index, selectedDesignId, onSelectTemplate, data 
     }
   };
 
+
+  const isPremium = index % 3 === 0; // Mark every 3rd template as premium
+
   return (
     <div className="relative group cursor-pointer" onClick={() => onSelectTemplate(design)}>
       <div ref={cardRef} className="aspect-[1.75/1]">
         <DynamicCard data={data} designConfig={design} />
       </div>
-      {selectedDesignId === design.id && (
-        <>
-          <div className="absolute top-2 left-2">
-            <Check className="w-4 h-4 text-green-500 bg-white rounded-full p-1" />
-          </div>
-          <div className="absolute top-2 right-2">
-            <Button size="sm" onClick={handleDownload} variant="secondary">
-              <Download className="w-4 h-4" />
-            </Button>
-          </div>
-        </>
-      )}
-    </div>
+
+      {/* Premium Badge */}
+      {isPremium && (
+        <div className="absolute top-2 left-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white px-2 py-1 rounded-md text-xs font-semibold flex items-center gap-1 shadow-lg">
+          <span>⭐</span> Premium
+        </div>
+      )
+      }
+
+      {
+        selectedDesignId === design.id && (
+          <>
+            <div className="absolute top-2 left-2">
+              <Check className="w-4 h-4 text-green-500 bg-white rounded-full p-1" />
+            </div>
+            <div className="absolute top-2 right-2">
+              <Button size="sm" onClick={handleDownload} variant="secondary">
+                <Download className="w-4 h-4" />
+              </Button>
+            </div>
+          </>
+        )
+      }
+
+      {/* Hover overlay with price */}
+      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+        < div className="text-center text-white">
+          <p className="text-lg font-semibold mb-2">{isPremium ? "$2.99" : "Free"}</p>
+          <p className="text-sm">{isPremium ? "Premium Design" : "Basic Design"}</p>
+        </div >
+      </div >
+    </div >
   );
 };
 
@@ -57,11 +79,11 @@ export const AITemplateGallery = ({ data, onSelectTemplate, selectedDesignId }: 
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-    const requestDesigns = async (count: number = 100) => {
+  const requestDesigns = async (count: number = 100) => {
     setIsLoading(true);
     try {
       const designs = await generateDesigns(count, data);
-      
+
       // Process and validate the designs
       if (!Array.isArray(designs)) {
         throw new Error('Invalid response format from AI service');
