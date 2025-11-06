@@ -10,7 +10,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
-import { CreditCard, Wallet, Check } from "lucide-react";
+import { CreditCard, Wallet, Check, Smartphone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface PaymentModalProps {
@@ -78,6 +78,16 @@ export const PaymentModal = ({
                                 </Label>
                             </div >
                             <div className="flex items-center space-x-2 border border-border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
+                                <RadioGroupItem value="upi" id="upi" />
+                                <Label
+                                    htmlFor="upi"
+                                    className="flex items-center gap-2 cursor-pointer flex-1"
+                                >
+                                    <Smartphone className="w-4 h-4" />
+                                    UPI Payment
+                                </Label>
+                            </div>
+                            <div className="flex items-center space-x-2 border border-border rounded-lg p-3 cursor-pointer hover:bg-muted/50">
                                 < RadioGroupItem value="wallet" id="wallet" />
                                 <Label
                                     htmlFor="wallet"
@@ -120,6 +130,61 @@ export const PaymentModal = ({
                         )
                     }
 
+                    {/* UPI Payment Interface */}
+                    {paymentMethod === "upi" && (
+                        <div className="space-y-4 animate-fade-in">
+                            <div className="space-y-2">
+                                <Label htmlFor="upiId">Enter UPI ID</Label>
+                                <Input
+                                    id="upiId"
+                                    placeholder="username@paytm / 9876543210@paytm"
+                                    type="text"
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                    Enter your UPI ID or phone number linked to UPI
+                                </p>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label > Or Pay with UPI Apps</Label >
+                                <div className="grid grid-cols-4 gap-3">
+                                    < button className="flex flex-col items-center gap-2 p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+                                        < div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                                            GPay
+                                        </ div>
+                                        <span className="text-xs text-foreground">Google Pay</span>
+                                    </button >
+                                    <button className="flex flex-col items-center gap-2 p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+                                        < div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                                            PhP
+                                        </ div>
+                                        <span className="text-xs text-foreground">PhonePe</span>
+                                    </button >
+                                    <button className="flex flex-col items-center gap-2 p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+                                        < div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                                            Paytm
+                                        </ div>
+                                        <span className="text-xs text-foreground">Paytm</span>
+                                    </button >
+                                    <button className="flex flex-col items-center gap-2 p-3 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+                                        < div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center text-white font-bold text-xs">
+                                            BHIM
+                                        </ div>
+                                        <span className="text-xs text-foreground">BHIM UPI</span>
+                                    </button >
+                                </div >
+                            </div >
+
+                            <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900 rounded-lg p-3">
+                                < p className="text-xs text-foreground flex items-start gap-2">
+                                    < Check className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
+                                    < span > Scan QR code or enter UPI PIN to complete payment instantly</ span>
+                                </p >
+                            </div >
+                        </div >
+                    )}
+
+
                     {/* Wallet Payment Info */}
                     {
                         paymentMethod === "wallet" && (
@@ -142,7 +207,7 @@ export const PaymentModal = ({
                 </div >
 
                 {/* Action Buttons */}
-                < div className="flex gap-3">
+                < div className="flex gap-3" >
                     < Button variant="outline" onClick={onClose} className="flex-1">
                         Cancel
                     </Button >
